@@ -11,11 +11,12 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useMovies} from '../hooks/useMovies';
 import Card from '../components/Card';
+import HorizontalSlider from '../components/HorizontalSlider';
 
 const {width: windowWidth} = Dimensions.get('window');
 
 const HomeScreen = () => {
-  const {moviesNow, loading} = useMovies();
+  const {now_playing, upcoming, top_rated, popular, loading} = useMovies();
   const {top} = useSafeAreaInsets();
 
   if (loading) {
@@ -31,25 +32,17 @@ const HomeScreen = () => {
       <View style={{marginTop: top + 20}}>
         <View style={{height: 440}}>
           <Carousel
-            data={moviesNow}
+            data={now_playing}
             renderItem={({item}: any) => <Card movie={item} />}
             sliderWidth={windowWidth}
             itemWidth={300}
+            inactiveSlideOpacity={0.9}
           />
         </View>
         {/* peliculas populares */}
-        <View style={{height: 260}}>
-          <Text style={{fontSize: 30, fontWeight: 'bold'}}>Populares</Text>
-          <FlatList
-            data={moviesNow}
-            renderItem={({item}: any) => (
-              <Card movie={item} height={200} width={140} />
-            )}
-            keyExtractor={item => item.id.toString()}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
+        <HorizontalSlider title="Popular " movies={popular} />
+        <HorizontalSlider title="Top  rated " movies={top_rated} />
+        <HorizontalSlider title="Upcoming" movies={upcoming} />
       </View>
     </ScrollView>
   );
